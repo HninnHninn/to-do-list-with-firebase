@@ -4,14 +4,50 @@
     <div v-if="this.$store.getters.getItems && this.$store.getters.getItems.length > 0">
       <div class="title">Today, you've go to do...</div> 
      <div v-for="item in this.$store.getters.getItems" :key="item.id">
-       {{ item.title }}<br /><br /><small style="text-decoration:underline;" @click="deleteItem(item.id)">Delete</small>
+       {{ item.title }}<br /><br />
+       <v-btn depressed small color="error" @click="EditItem(item.id)">Edit</v-btn>
+       <small style="text-decoration:underline;" @click="deleteItem(item.id)">Delete</small>
        <hr />
+       <v-dialog
+          v-model="dialog"
+          max-width="290"
+        >
+      <v-card>
+        <v-card-title class="headline">Use Google's location service?</v-card-title>
+
+        <v-card-text>
+          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Disagree
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Agree
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
      </div>
    </div>
     <div class="title">What do I need to do today?</div>
     <input v-model="myTodo" /><button @click="addToDo">Add</button>
     <div v-if="errors !== ''" id="errors">{{ errors }}</div>
   </div>
+
 </template>
 
 <script>
@@ -24,7 +60,8 @@ export default {
   data: function () {
     return {
       myTodo: '',
-      errors: ''
+      errors: '',
+      dialog: false,
     }
   },
   methods: {
@@ -57,6 +94,9 @@ export default {
       } else {
         this.error = 'Invalid ID'
       }
+    },
+    EditItem: function (){
+      this.dialog=true;
     }
   }
 }
